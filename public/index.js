@@ -1,5 +1,5 @@
 
-
+var beer = 0;
 
 
 var makeRequest = function(url, callback){
@@ -12,24 +12,37 @@ var makeRequest = function(url, callback){
 var requestComplete = function(){
   if(this.status !== 200 ) return;
   var jsonString = this.responseText;
-  information = JSON.parse(jsonString);
-  populatelist(information);
+  beer = JSON.parse(jsonString);
+  populatelist(beer);
 }
 
 var populatelist = function(info){
+  var body = theBestGettingEver("selector-location");
+  var select = theBestBuilderEver("select");
+  select.setAttribute("id", "selector");
+  body.appendChild(select);
+  console.log(select.id);
   info.forEach(function(beer){
-    console.log(beer.ingredients.malt)
-    createElementList(beer)
+      // createElementList(beer)
+      createElementSelector(beer);
+    })
+
+  select.addEventListener('change', function(){
+
+    objectFinder(this.value);
   })
 }
 
-var creatingElementIngredients = function(beer){
-  beer.ingredients.malt.forEach(function(malt){
-    var ul = theBestGettingEver("beer-list");
-    var li = theBestBuilderEver("LI")
-    li.innerText = malt.name;
-    ul.appendChild(li);
-  })
+var creatingElementIngredients = function(beer){   
+ var ul = theBestGettingEver("beer-list");
+ var li = theBestBuilderEver("LI")
+ li.innerHTML = "<h4><b><u>These are the ingredients</b></u></h4>"
+ ul.appendChild(li)
+ beer.ingredients.malt.forEach(function(malt){
+  var li = theBestBuilderEver("LI")
+  li.innerText = malt.name;
+  ul.appendChild(li);
+})
 }
 
 var theBestGettingEver = function(item){
@@ -49,6 +62,14 @@ var imageFormatter = function(item, beer){
   item.setAttribute("alt", beer.name);
 }
 
+var objectFinder = function(name){
+  beer.forEach(function(singlebeer){
+    if(singlebeer.name === name){
+      createElementList(singlebeer);
+    }
+  })
+}
+
 var createElementList = function(beer){
   var ul = theBestGettingEver("beer-list")
   var img = theBestBuilderEver("IMG");
@@ -58,6 +79,13 @@ var createElementList = function(beer){
   ul.appendChild(li2);
   ul.appendChild(img);
   creatingElementIngredients(beer);
+}
+
+var createElementSelector = function(beer){
+  var selector = theBestGettingEver("selector");
+  var option = theBestBuilderEver("option");
+  option.innerText = beer.name;
+  selector.appendChild(option);
 }
 
 
